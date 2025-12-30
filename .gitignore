@@ -1,0 +1,6 @@
+# Ignore everything
+*
+# Whitelist specific directories and files
+!/src/
+!/maps/
+!/.gitignore
