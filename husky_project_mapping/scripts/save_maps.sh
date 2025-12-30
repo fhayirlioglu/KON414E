@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# Harita klasoru yoksa olustur
 mkdir -p ~/ros_ws/maps
 
 echo "----------------------------------------"
 echo "1. Saving Resolution 0.1m (High Res)..."
-# DIKKAT: -f parametresini kaldirdik. 
-# "octomap_binary"yi sizin topic isminize yonlendiriyoruz.
+
 rosrun octomap_server octomap_saver ~/ros_ws/maps/octomap_0_1.bt octomap_binary:=/octomap_0_1
 
 echo "----------------------------------------"

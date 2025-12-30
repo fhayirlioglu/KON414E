@@ -5,10 +5,8 @@ import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
 def movebase_client():
-    # Node başlatılıyor
     rospy.init_node('exact_goal_sender')
 
-    # Action Client oluşturuluyor
     client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
     
     print("Move_base sunucusu bekleniyor...")
@@ -19,11 +17,11 @@ def movebase_client():
     goal.target_pose.header.frame_id = "map"
     goal.target_pose.header.stamp = rospy.Time.now()
 
-    # --- BURAYI DEGISTIRIN (Hedef Koordinatlar) ---
+    
     goal.target_pose.pose.position.x = -20.5   # X Metre
     goal.target_pose.pose.position.y = 35.3   # Y Metre
-    goal.target_pose.pose.orientation.w = 0.00187 # Yonelim (Z ekseninde donus icin degistirilebilir)
-    # ----------------------------------------------
+    goal.target_pose.pose.orientation.w = 0.00187 # Yonelim 
+    
 
     print(f"Hedef gonderiliyor: X={goal.target_pose.pose.position.x}, Y={goal.target_pose.pose.position.y}")
     client.send_goal(goal)

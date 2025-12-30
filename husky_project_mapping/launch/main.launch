@@ -1,25 +1,19 @@
 <?xml version="1.0"?>
 <launch>
 
-  <!-- =======================
-       1. Sensor Configuration
-       ======================= -->
+
   <!-- Joystick Device Override -->
   <param name="/joy_teleop/joy_node/dev" value="/dev/input/js0" />
   <env name="HUSKY_JOY_DEVICE" value="/dev/input/js0" />
   <!-- Enable 3D LiDAR (VLP-16) -->
   <env name="HUSKY_LASER_3D_ENABLED" value="1" />
-  <!-- Enable 2D LiDAR (LMS1xx) for Navigation -->
   <env name="HUSKY_LMS1XX_ENABLED" value="1" />
   
-  <!-- Add RTK-GPS via URDF Extras (Commented out for debug) -->
-  <env name="HUSKY_URDF_EXTRAS" value="$(find husky_description)/urdf/rtk_gps.urdf.xacro" />
   
-  <!-- Increase laser density for mapping quality? Default is fine for now. -->
+  <env name="HUSKY_URDF_EXTRAS" value="$(find husky_description)/urdf/rtk_gps.urdf.xacro" />
 
-  <!-- =======================
-       2. Simulation World
-       ======================= -->
+
+
   <!-- Launch Orchard World -->
   <include file="$(find cpr_orchard_gazebo)/launch/orchard_world.launch">
     <!-- Spawn robot at a good starting point -->
@@ -30,15 +24,9 @@
     <arg name="gui" value="true"/>
   </include>
 
-  <!-- =======================
-       3. Localization
-       ======================= -->
   <include file="$(find husky_project_mapping)/launch/include/localization.launch" />
   <include file="$(find husky_project_mapping)/launch/include/mapping.launch" />
 
-  <!-- =======================
-       5. Visualization
-       ======================= -->
   <node name="rviz_project" pkg="rviz" type="rviz" args="-d $(find husky_project_mapping)/config/mapping.rviz" />
 
 
