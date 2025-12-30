@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Argument to select which map to view (default 0.1m) -->
+  <arg name="map_file" default="$(env HOME)/ros_ws/maps/octomap_0_1.bt" />
+
+  <!-- Octomap Server to publish the saved map -->
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_viewer" args="$(arg map_file)">
+    <param name="resolution" value="0.1" />
+    <param name="frame_id" type="string" value="map" />
+    <param name="base_frame_id" type="string" value="base_link" />
+  </node>
+
+  <!-- RViz for visualization -->
+  <node name="rviz_viewer" pkg="rviz" type="rviz" args="-d $(find husky_project_mapping)/config/mapping.rviz" />
+
+</launch>

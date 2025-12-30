@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Argument to select the map file -->
+  <arg name="map_file" default="$(env HOME)/ros_ws/maps/octomap_0_4.bt" doc="Path to the .bt octomap file to load"/>
+  <arg name="map_name" default="default_map" doc="Name of map for logging (optional)"/>
+
+  <!-- =======================
+       1. Simulation World
+       ======================= -->
+  <include file="$(find cpr_orchard_gazebo)/launch/orchard_world.launch">
+    <arg name="robot_x" value="-11.0"/>
+    <arg name="robot_y" value="9.0"/>
+    <arg name="robot_z" value="0.2"/>
+    <arg name="robot_yaw" value="0.0"/>
+    <arg name="gui" value="false"/>
+  </include>
+
+  <!-- =======================
+       2. Localization
+       ======================= -->
+  <include file="$(find husky_project_mapping)/launch/include/localization.launch" />
+
+  <!-- =======================
+       3. Serve the Octomap
+       ======================= -->
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" args="$(arg map_file)" output="screen">
+    <param name="frame_id" value="map"/>
+    <param name="base_frame_id" value="base_link"/>
+    <param name="filter_ground" value="true"/>
+    <param name="ground_filter/distance" value="0.2"/> 
+    <param name="occupancy_min_z" value="0.3"/>
+    <param name="occupancy_max_z" value="10.0"/>
+    
+    <!-- Publish the 2D projected map to /map for move_base -->
+    <remap from="projected_map" to="/map"/>
+  </node>
+
+  <!-- =======================
+       4. Navigation (Move Base)
+       ======================= -->
+  <include file="$(find husky_navigation)/launch/move_base.launch">
+    <arg name="no_static_map" value="false"/>
+  </include>
+
+  <!-- =======================
+       5. Automated Monitor
+       ======================= -->
+  <node pkg="husky_project_mapping" type="automated_test_monitor.py" name="test_monitor" output="screen">
+    <param name="map_name" value="$(arg map_file)"/>
+  </node>
+
+  <!-- =======================
+       6. Visualization
+       ======================= -->
+  <node name="rviz_nav" pkg="rviz" type="rviz" args="-d $(find husky_project_mapping)/config/mapping.rviz" />
+
+</launch>

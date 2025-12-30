@@ -4,13 +4,16 @@
   <!-- =======================
        1. Sensor Configuration
        ======================= -->
+  <!-- Joystick Device Override -->
+  <param name="/joy_teleop/joy_node/dev" value="/dev/input/js0" />
+  <env name="HUSKY_JOY_DEVICE" value="/dev/input/js0" />
   <!-- Enable 3D LiDAR (VLP-16) -->
   <env name="HUSKY_LASER_3D_ENABLED" value="1" />
   <!-- Enable 2D LiDAR (LMS1xx) for Navigation -->
   <env name="HUSKY_LMS1XX_ENABLED" value="1" />
   
   <!-- Add RTK-GPS via URDF Extras (Commented out for debug) -->
-  <!-- <env name="HUSKY_URDF_EXTRAS" value="$(find husky_description)/urdf/rtk_gps.urdf.xacro" /> -->
+  <env name="HUSKY_URDF_EXTRAS" value="$(find husky_description)/urdf/rtk_gps.urdf.xacro" />
   
   <!-- Increase laser density for mapping quality? Default is fine for now. -->
 
@@ -23,7 +26,7 @@
     <arg name="robot_x" value="-11.0"/>
     <arg name="robot_y" value="9.0"/>
     <arg name="robot_z" value="0.2"/>
-    <arg name="robot_yaw" value="1.57"/>
+    <arg name="robot_yaw" value="0.0"/>
     <arg name="gui" value="true"/>
   </include>
 
@@ -38,7 +41,6 @@
        ======================= -->
   <node name="rviz_project" pkg="rviz" type="rviz" args="-d $(find husky_project_mapping)/config/mapping.rviz" />
 
-  <!-- Override Joystick Device to standard js0 -->
-  <param name="/joy_teleop/joy_node/dev" value="/dev/input/js0" />
+
 
 </launch>

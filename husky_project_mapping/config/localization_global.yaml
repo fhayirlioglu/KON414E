@@ -1,7 +1,13 @@
 # Config for Global EKF (Map Frame)
 frequency: 50
-two_d_mode: true
+two_d_mode: false
 publish_tf: true
+predict_to_current_time: true
+initial_state: [0.0, 0.0, 0.1328, 
+                0.0, 0.0, 0.0, 
+                0.0, 0.0, 0.0, 
+                0.0, 0.0, 0.0, 
+                0.0, 0.0, 0.0]
 
 map_frame: map
 odom_frame: odom
