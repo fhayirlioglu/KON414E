@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<launch>
+
+  <group ns="rtabmap">
+    <!-- RTAB-Map: 3D Mapping with Velodyne -->
+    <node pkg="rtabmap_slam" type="rtabmap" name="rtabmap" output="log" args="--delete_db_on_start">
+      
+      <!-- Inputs -->
+      <param name="subscribe_depth" value="false"/>
+      <param name="subscribe_rgb" value="false"/>
+      <param name="subscribe_scan_cloud" value="true"/>
+      <param name="subscribe_scan" value="false"/>
+      
+      <remap from="scan_cloud" to="/velodyne_points"/>
+      <remap from="odom" to="/odometry/filtered_map"/>
+      
+      <!-- Config -->
+      <param name="frame_id" value="base_link"/>
+      <param name="map_frame_id" value="map"/>
+      <param name="odom_frame_id" value="odom"/> <!-- TF is published by EKF, RTAB-Map just reads it -->
+      <param name="publish_tf" value="false"/>   <!-- EKF publishes map->odom -->
+      
+      <param name="queue_size" value="20"/>
+      <param name="approx_sync" value="true"/>
+
+      <!-- RTAB-Map Parameters -->
+      <param name="Reg/Strategy" value="1"/> <!-- 0=Visual, 1=Icp, 2=Visual+Icp -->
+      <param name="Icp/CorrespondenceRatio" value="0.2"/>
+      <param name="Grid/3D" value="true"/>
+      <param name="Grid/RangeMax" value="20.0"/>
+      <param name="Grid/FromDepth" value="false"/> <!-- Using 3D Lidar -->
+      
+    </node>
+  </group>
+
+  <!-- Octomap Servers: 3 Resolutions -->
+  
+  <!-- Resolution 1: 0.1m (Fine) -->
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_server_0_1">
+    <param name="resolution" value="0.1" />
+    <param name="frame_id" type="string" value="map" />
+    <param name="base_frame_id" type="string" value="base_link" />
+    <remap from="cloud_in" to="/rtabmap/cloud_map" />
+    <remap from="octomap_binary" to="octomap_0_1" />
+    <remap from="occupied_cells_vis_array" to="octomap_0_1_vis" />
+    <remap from="projected_map" to="map_0_1" />
+    <remap from="static_map" to="static_map_0_1" />
+  </node>
+
+  <!-- Resolution 2: 0.2m (Medium) -->
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_server_0_2">
+    <param name="resolution" value="0.2" />
+    <param name="frame_id" type="string" value="map" />
+    <param name="base_frame_id" type="string" value="base_link" />
+    <remap from="cloud_in" to="/rtabmap/cloud_map" />
+    <remap from="octomap_binary" to="octomap_0_2" />
+    <remap from="occupied_cells_vis_array" to="octomap_0_2_vis" />
+    <remap from="projected_map" to="map_0_2" />
+    <remap from="static_map" to="static_map_0_2" />
+  </node>
+
+  <!-- Resolution 3: 0.4m (Coarse) -->
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_server_0_4">
+    <param name="resolution" value="0.4" />
+    <param name="frame_id" type="string" value="map" />
+    <param name="base_frame_id" type="string" value="base_link" />
+    <remap from="cloud_in" to="/rtabmap/cloud_map" />
+    <remap from="octomap_binary" to="octomap_0_4" />
+    <remap from="occupied_cells_vis_array" to="octomap_0_4_vis" />
+    <remap from="projected_map" to="map_0_4" />
+    <remap from="static_map" to="static_map_0_4" />
+  </node>
+
+</launch>

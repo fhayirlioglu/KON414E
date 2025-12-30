@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Resolution suffix: 0_1, 0_2, 0_4 -->
+  <arg name="res" default="0_1"/>
+
+  <group>
+    <!-- Remap map topic and service to resolution specific ones -->
+    <remap from="/map" to="/map_$(arg res)"/>
+    <remap from="/static_map" to="/static_map_$(arg res)"/>
+    
+    <!-- Launch standard Husky Move Base -->
+    <include file="$(find husky_navigation)/launch/move_base.launch" />
+  </group>
+
+</launch>

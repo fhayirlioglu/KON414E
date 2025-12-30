@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>husky_mover</name>
+  <version>0.0.1</version>
+  <description>A simple ROS node that moves the Husky robot by publishing to /cmd_vel</description>
+
+  <maintainer email="furkanhayirlioglu@example.com">Furkan Hayırlıoğlu</maintainer>
+  <license>MIT</license>
+
+  <!-- Gerekli bağımlılıklar -->
+  <depend>rospy</depend>
+  <depend>geometry_msgs</depend>
+
+  <!-- Build ve test bağımlılıkları -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>

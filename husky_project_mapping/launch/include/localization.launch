@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+
+  <group ns="gps_fusion">
+    <!-- Navsat Transform: Converts GPS to Odometry -->
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" respawn="true">
+      <param name="magnetic_declination_radians" value="0"/>
+      <param name="yaw_offset" value="1.5707963"/> <!-- IMU reads 0 facing East? Husky usually needs this. -->
+      <param name="zero_altitude" value="true"/>
+      <param name="broadcast_cartesian_transform" value="true"/>
+      <param name="publish_filtered_gps" value="true"/>
+      
+      <remap from="imu/data" to="/imu/data"/>
+      <remap from="gps/fix" to="/navsat/fix"/>
+      <remap from="odometry/gps" to="/odometry/gps"/>
+      
+      <!-- Current filtered odometry for initial setup -->
+      <remap from="odometry/filtered" to="/odometry/filtered_map"/>
+    </node>
+
+    <!-- Global EKF: Fuses Wheel Odom + GPS Odom -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_global" clear_params="true">
+      <rosparam command="load" file="$(find husky_project_mapping)/config/localization_global.yaml" />
+      <remap from="odometry/filtered" to="/odometry/filtered_map"/>
+    </node>
+  </group>
+
+</launch>
